@@ -158,3 +158,26 @@ clear
 # Installing the rest of the packages 
 pacman -S grub efibootmgr networkmanager network-manager-applet wpa_supplicant mtools dosfstools git snapper bluez bluez-utils xdg-utils alsa-utils pulseaudio pulseaudio-bluetooth base-devel linux-headers 
 
+# Including the btrfs module into the kernel
+sed -i '7s/.*/MODULES=(btrfs)/' /etc/mkinitcpio.conf
+mkinitcpio -p linux
+
+# Installing grub 
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Enabling system services
+systemctl enable NetworkManager
+systemctl enable bluetooth
+
+# Cleaning the screen
+clear
+
+# Creating the user 
+read -p "Plase, enter the username you want: " usernme
+useradd -m $usernme
+passwd $usernme
+usermod -aG wheel,audio,video,storage $usernme
+chmod u+w /etc/sudoers
+sed -i '85s/.*/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+chmod u-w /etc/sudoers
