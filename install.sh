@@ -200,8 +200,7 @@ read -p "Press Enter to continue"
 visudo
 
 # Exiting the chroot
-exit
-EOF  
+EOF
 
 umount -a
 echo "Install has been completed, you might want to reboot now"
