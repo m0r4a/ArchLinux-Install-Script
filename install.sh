@@ -85,12 +85,12 @@ echo "Please, select which microcode you want to install"
 
 select microcode_option in "amd-ucode" "intel-ucode" "None"; do
     case $microcode_option in
-        "amd-ucode")
-            microcode_package="amd-ucode"
-            break
-            ;;
         "intel-ucode")
             microcode_package="intel-ucode"
+            break
+            ;;
+        "amd-ucode")
+            microcode_package="amd-ucode"
             break
             ;;
         "None")
@@ -103,14 +103,18 @@ select microcode_option in "amd-ucode" "intel-ucode" "None"; do
     esac
 done
 
-# Executing the command
+
+
+# Installing the basic packages for linux
+echo -e "The packages: base linux linux-firmware vim $microcode_package will be installed \n"
+read -p "Press Enter to continue"
 pacstrap /mnt base linux linux-firmware vim $microcode_package\
 
 # Generating the fstab 
 genfstab -U /mnt >> /mnt/etc/fstab 
 
 # Getting into the install
-arch-chroot /mnt
+arch-chroot /mnt /bin/bash <<EOF
 
 # Creating the zoneinfo
 read -p "¿Do you know your zoneinfo? (Y/N): " know_timezone
@@ -144,7 +148,7 @@ echo "Generating the locale.."
 locale-gen
 
 # Sending the info to the locale.conf
-echo "LANG=en_US.UTF-8" > locale.conf
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
 # Configuring the hostname
 read -p "Enter the hostname of your computer: " hostnme
@@ -190,6 +194,17 @@ read -p "Plase, enter the username you want: " usernme
 useradd -m $usernme
 passwd $usernme
 usermod -aG wheel,audio,video,storage $usernme
-chmod u+w /etc/sudoers
-sed -i '85s/.*/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-chmod u-w /etc/sudoers
+echo -e 'Now you will have to uncomment the line "%wheel ALL=(ALL:ALL) ALL" using Vim'
+read -p "Press Enter to continue"
+visudo
+
+# Exiting the chroot
+exit
+EOF  
+
+umount -a
+echo "Install has been completed, you might want to reboot now"
+exit(0)
+
+
+
