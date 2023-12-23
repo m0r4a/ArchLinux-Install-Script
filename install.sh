@@ -1,4 +1,4 @@
-read -p "¿Do you already created the partitions? (Y/N): " partitions_created
+read -p "Have you already created the partitions? (Y/N): " partitions_created
 
 case $partitions_created in
     [Yy]) 
@@ -83,7 +83,7 @@ clear
 
 echo "Please, select which microcode you want to install"
 
-select microcode_option in "amd-ucode" "intel-ucode" "None"; do
+select microcode_option in "intel-ucode" "amd-ucode" "None"; do
     case $microcode_option in
         "intel-ucode")
             microcode_package="intel-ucode"
@@ -103,7 +103,8 @@ select microcode_option in "amd-ucode" "intel-ucode" "None"; do
     esac
 done
 
-
+# Cleaning the screen
+clear
 
 # Installing the basic packages for linux
 echo -e "The packages: base linux linux-firmware vim $microcode_package will be installed \n"
@@ -120,7 +121,7 @@ arch-chroot /mnt /bin/bash <<EOF
 read -p "¿Do you know your zoneinfo? (Y/N): " know_timezone
 
 case $know_timezone in
-    [SsYy]) 
+    [Yy]) 
         # If the user knows the ZoneInfo, ask for it
         read -p "Write your zoneinfo (e.g 'America/Mexico_City'): " timezone
         ;;
@@ -204,7 +205,7 @@ EOF
 
 umount -a
 echo "Install has been completed, you might want to reboot now"
-exit(0)
+exit 0
 
 
 
