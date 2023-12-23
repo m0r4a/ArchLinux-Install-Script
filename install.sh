@@ -114,10 +114,10 @@ pacstrap /mnt base linux linux-firmware vim $microcode_package\
 # Generating the fstab 
 genfstab -U /mnt >> /mnt/etc/fstab 
 
-# Getting into the install
-arch-chroot /mnt /bin/bash <<EOF
+#################################################################################################################
+# Apparently the arch-chroot doesn't work (or I am way to dumb) so i will collect the variables before hand #####
 
-# Creating the zoneinfo
+    # Creating the zoneinfo
 read -p "¿Do you know your zoneinfo? (Y/N): " know_timezone
 
 case $know_timezone in
@@ -134,6 +134,38 @@ case $know_timezone in
         read -p "Ingresa tu zona horaria: " timezone
         ;;
 esac
+
+    # Asking for the hostname
+read -p "Enter the hostname of your computer: " hostnme
+
+    # Asking for the password
+
+while true; do
+    # Prompt for the password
+    read -s -p "Enter your password: " passwd1
+    echo
+
+    # Prompt for the password again for confirmation
+    read -s -p "Enter your password again: " passwd2
+    echo
+
+    # Check if the passwords match
+    if [ "$passwd1" == "$passwd2" ]; then
+        # Passwords match, assign to the variable and exit the loop
+        user_passwd="$passwd1"
+        break
+    else
+        # Passwords don't match, display error message
+        echo "Passwords do not match. Please try again."
+    fi
+done
+
+
+###############################################################################################################
+
+# Getting into the install
+arch-chroot /mnt /bin/bash <<EOF
+
 
 # Creating the symlink 
 ln -sf "/usr/share/zoneinfo/$timezone" /etc/localtime
@@ -152,7 +184,6 @@ locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
 # Configuring the hostname
-read -p "Enter the hostname of your computer: " hostnme
 echo "$hostnme" > /etc/hostname
 
 # Configuring the hosts file (this can be simpler but i wanted to make the code easier to read)
@@ -162,7 +193,6 @@ echo "127.0.0.1    localhost" >> /etc/hosts
 echo "::1    localhost" >> /etc/hosts
 echo "127.0.1.1    $hostnme.localdomain    $hostnme" >> /etc/hosts
 
-read -p "Press Enter to continue"
 
 # Cleaning the screen
 clear
@@ -193,9 +223,8 @@ systemctl enable bluetooth
 clear
 
 # Creating the user 
-read -p "Plase, enter the username you want: " usernme
 useradd -m $usernme
-passwd $usernme
+echo "$usernme:$user_passwd" | chpasswd
 usermod -aG wheel,audio,video,storage $usernme
 echo -e 'Now you will have to uncomment the line "%wheel ALL=(ALL:ALL) ALL" using Vim'
 read -p "Press Enter to continue"
@@ -204,9 +233,9 @@ visudo
 # Exiting the chroot
 EOF
 
-umount -a
-echo "Install has been completed, you might want to reboot now"
-exit 0
+#umount -a
+#echo "Install has been completed, you might want to reboot now"
+#exit 0
 
 
 
