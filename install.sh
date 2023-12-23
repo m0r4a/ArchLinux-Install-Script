@@ -1,4 +1,16 @@
-echo "You have to create your partitions before running the script"
+read -p "¿Do you already created the partitions? (Y/N): " partitions_created
+
+case $partitions_created in
+    [Yy]) 
+        # If the user has created partitions, continue with the script
+        clear
+        ;;
+    *)
+        # If the user hasn't created partitions, show the message and exit
+        echo "Debes crear tus particiones antes de ejecutar el script."
+        exit 1
+        ;;
+esac
 
 # Showing your partitions
 lsblk 
@@ -101,7 +113,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 
 # Creating the zoneinfo
-read -p "¿Do you know your zoneinfo? (S/N): " know_timezone
+read -p "¿Do you know your zoneinfo? (Y/N): " know_timezone
 
 case $know_timezone in
     [SsYy]) 
