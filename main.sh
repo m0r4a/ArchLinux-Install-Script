@@ -110,7 +110,8 @@ case $know_timezone in
         ;;
     *)
         # If the user doesnt know its zoneinfo, they're shown
-        echo "Zonas horarias disponibles:"
+        echo "Using timedatectl to show the available timezones"
+        sleep 3
         timedatectl list-timezones
         echo
         read -p "Ingresa tu zona horaria: " timezone
@@ -118,6 +119,42 @@ case $know_timezone in
 esac
 
 # Creating the symlink 
-sudo ln -sf "/usr/share/zoneinfo/$timezone" /etc/localtime
+ln -sf "/usr/share/zoneinfo/$timezone" /etc/localtime
 
+# Synchronizing the system and the hardware clock 
+hwclock --systohc
+
+# Deleting the coment on the en_US.UTF-8
+sed -i '171s/^.//' /etc/locale.gen
+
+# Generating the locale 
+echo "Generating the locale.."
+locale-gen
+
+# Sending the info to the locale.conf
+echo "LANG=en_US.UTF-8" > locale.conf
+
+# Configuring the hostname
+read -p "Enter the hostname of your computer: " hostnme
+echo "$hostnme" > /etc/hostname
+
+# Configuring the hosts file (this can be simpler but i wanted to make the code easier to read)
+echo "Configuring the /etc/hosts file"
+echo "" >> /etc/hosts
+echo "127.0.0.1    localhost" >> /etc/hosts
+echo "::1    localhost" >> /etc/hosts
+echo "127.0.1.1    $hostnme.localdomain    $hostnme" >> /etc/hosts
+
+# Cleaning the screen
+clear
+
+# Creating a password for the root user
+echo "This will be the password for the root user"
+passwd
+
+# Cleaning the screen
+clear
+
+# Installing the rest of the packages 
+pacman -S grub efibootmgr networkmanager network-manager-applet wpa_supplicant mtools dosfstools git snapper bluez bluez-utils xdg-utils alsa-utils pulseaudio pulseaudio-bluetooth base-devel linux-headers 
 
