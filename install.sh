@@ -138,11 +138,33 @@ esac
     # Asking for the hostname
 read -p "Enter the hostname of your computer: " hostnme
 
-    # Asking for the password
+    # Asking for the root password
 
 while true; do
     # Prompt for the password
-    read -s -p "Enter your password: " passwd1
+    read -s -p "Enter the ROOT password: " passwd1
+    echo
+
+    # Prompt for the password again for confirmation
+    read -s -p "Enter your password again: " passwd2
+    echo
+
+    # Check if the passwords match
+    if [ "$passwd1" == "$passwd2" ]; then
+        # Passwords match, assign to the variable and exit the loop
+        root_passwd="$passwd1"
+        break
+    else
+        # Passwords don't match, display error message
+        echo "Passwords do not match. Please try again."
+    fi
+done
+
+ # Asking for the USER credentials
+
+while true; do
+    # Prompt for the password
+    read -s -p "Enter the ROOT password: " passwd1
     echo
 
     # Prompt for the password again for confirmation
@@ -160,6 +182,7 @@ while true; do
     fi
 done
 
+read -p "Plase, enter the username you want: " usernme
 
 ###############################################################################################################
 
@@ -221,6 +244,9 @@ systemctl enable bluetooth
 
 # Cleaning the screen
 clear
+
+# Setting root's password
+echo "root:$root_passwd" | chpasswd
 
 # Creating the user 
 useradd -m $usernme
