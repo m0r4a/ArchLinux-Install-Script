@@ -162,6 +162,8 @@ echo "127.0.0.1    localhost" >> /etc/hosts
 echo "::1    localhost" >> /etc/hosts
 echo "127.0.1.1    $hostnme.localdomain    $hostnme" >> /etc/hosts
 
+read -p "Press Enter to continue"
+
 # Cleaning the screen
 clear
 
