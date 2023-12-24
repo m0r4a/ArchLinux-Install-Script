@@ -115,7 +115,7 @@ clear
 # Installing the basic packages for linux
 echo -e "The packages: base linux linux-firmware vim $microcode_package will be installed \n"
 read -p "Press Enter to continue"
-pacstrap /mnt base linux linux-firmware vim $microcode_package\
+pacstrap /mnt base linux linux-firmware vim $microcode_package
 
 # Generating the fstab 
 genfstab -U /mnt >> /mnt/etc/fstab 
@@ -126,7 +126,7 @@ clear
 # Moving the chroot code into the chroot directory 
 mv /root/ArchLinux-Install-Script/chroot.sh /mnt
 
-echo -e "Now please do: arch-chroot /mnt and run the chroot.sh script /n/n"
+echo -e "Now please do:\n arch-chroot /mnt\n and run the chroot.sh script \n"
 read -p "Press Enter to continue"
 
 exit 0
