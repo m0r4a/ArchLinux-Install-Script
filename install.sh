@@ -114,7 +114,9 @@ pacstrap /mnt base linux linux-firmware vim $microcode_package\
 # Generating the fstab 
 genfstab -U /mnt >> /mnt/etc/fstab 
 
-echo "Now you might want to get into the chroot with the arch-chroot /mnt command and run the chroot.sh script"
+# Cleaning the screen
+clear 
+
 exit 0
 
 
