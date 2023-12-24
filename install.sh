@@ -146,7 +146,7 @@ while true; do
     echo
 
     # Prompt for the password again for confirmation
-    read -s -p "Enter your password again: " passwd2
+    read -s -p "Enter your ROOT password again: " passwd2
     echo
 
     # Check if the passwords match
@@ -164,11 +164,11 @@ done
 
 while true; do
     # Prompt for the password
-    read -s -p "Enter the ROOT password: " passwd1
+    read -s -p "Enter the USER password: " passwd1
     echo
 
     # Prompt for the password again for confirmation
-    read -s -p "Enter your password again: " passwd2
+    read -s -p "Enter your USER password again: " passwd2
     echo
 
     # Check if the passwords match
