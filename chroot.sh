@@ -1,39 +1,5 @@
 ## This is the file you should run after arch-chasdfroot /mnt 
 
- # Asking for the USER credentials
-
-function enter_password() {
-    local password_variable=$1
-
-    while true; do
-        # Prompt for the password
-        read -s -p "Enter the password: " passwd1
-        echo
-
-        # Prompt for the password again for confirmation
-        read -s -p "Enter the password again: " passwd2
-        echo
-
-        # Check if the passwords match
-        if [ "$passwd1" == "$passwd2" ]; then
-            # Passwords match, assign to the variable and exit the loop
-            eval "$password_variable=\"$passwd1\""
-            break
-        else
-            # Passwords don't match, display error message
-            echo "Passwords do not match. Please try again."
-        fi
-    done
-}
-
-# Example of usage
-# enter_password user_passwd
-
-
-
-
-###############################################################################################################
-
 read -p "¿Do you know your zoneinfo? (Y/N): " know_timezone
 
 case $know_timezone in
@@ -107,18 +73,22 @@ systemctl enable bluetooth
 # Cleaning the screen
 clear
 
-# Setting root's password
-echo "This will be your ROOT password"
-passwd
-
 # Creating the user 
-read -p "Enter the username you want" $usernme
+read -p "Enter the username you want: " usernme
 useradd -m $usernme
+echo "Now enter the password for your user"
 passwd $username
 usermod -aG wheel,audio,video,storage $usernme
+
+# Cleaning the screen
+clear
+
+# Configuring the sudoers file
 echo -e 'Now you will have to uncomment the line \n\n "%wheel ALL=(ALL:ALL) ALL"\n using Vim'
 read -p "Press Enter to continue"
 visudo
 
-# Exiting the chroot
-EOF
+echo "Install completed, now you might want to exit, do umount -a and reboot"
+exit 0
+
+
