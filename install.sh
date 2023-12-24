@@ -117,6 +117,9 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # Cleaning the screen
 clear 
 
+# Moving the chroot code into the chroot directory 
+mv /root/ArchLinux-Install-Script/chroot.sh /mnt
+
 exit 0
 
 
