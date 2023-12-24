@@ -84,7 +84,7 @@ usermod -aG wheel,audio,video,storage $usernme
 clear
 
 # Configuring the sudoers file
-echo -e 'Now you will have to uncomment the line \n\n "%wheel ALL=(ALL:ALL) ALL"\n using Vim'
+echo -e 'Now you will have to uncomment the line \n\n    "%wheel ALL=(ALL:ALL) ALL"  (usually at line 108)\nusing Vim'
 read -p "Press Enter to continue"
 visudo
 
