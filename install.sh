@@ -15,16 +15,22 @@ esac
 # Showing your partitions
 lsblk 
 
-# Gathering the partitions info
-read -p "Select your boot partition, e.g /dev/sda1: " boot_p
+# Asking for the partitions 
+read -p "Select your boot partition, e.g: sda1: " boot_p
 read -p "Select your swap partition: " swap_p
 read -p "Select the root partition: " root_p
 
-# Checking the vars 
+# Adding /dev/ to the partitions
+boot_p="/dev/$boot_p"
+swap_p="/dev/$swap_p"
+root_p="/dev/$root_p"
+
+# Verifica si todas las variables tienen valores no vacíos
 if [ -z "$boot_p" ] || [ -z "$swap_p" ] || [ -z "$root_p" ]; then
     echo "Error: You have to write all the partitions."
     exit 1
 fi
+
 
 # Cleaning the screen
 clear
