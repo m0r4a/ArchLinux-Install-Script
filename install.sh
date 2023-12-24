@@ -120,6 +120,9 @@ clear
 # Moving the chroot code into the chroot directory 
 mv /root/ArchLinux-Install-Script/chroot.sh /mnt
 
+echo -e "Now please do: arch-chroot /mnt and run the chroot.sh script /n/n"
+read -p "Press Enter to continue"
+
 exit 0
 
 
