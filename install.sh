@@ -7,7 +7,7 @@ case $partitions_created in
         ;;
     *)
         # If the user hasn't created partitions, show the message and exit
-        echo "Debes crear tus particiones antes de ejecutar el script."
+        echo "You have to create the partitions before executing the script."
         exit 1
         ;;
 esac
@@ -124,7 +124,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 clear 
 
 # Moving the chroot code into the chroot directory 
-mv /root/ArchLinux-Install-Script/chroot.sh /mnt
+cp /root/ArchLinux-Install-Script/chroot.sh /mnt
 
 echo -e "Now please do:\n arch-chroot /mnt\n and run the chroot.sh script \n"
 read -p "Press Enter to continue"
