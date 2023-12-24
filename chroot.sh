@@ -77,7 +77,7 @@ clear
 read -p "Enter the username you want: " usernme
 useradd -m $usernme
 echo "Now enter the password for your user"
-passwd $username
+passwd $usernme
 usermod -aG wheel,audio,video,storage $usernme
 
 # Cleaning the screen
