@@ -56,7 +56,7 @@ passwd
 clear
 
 # Installing the rest of the packages 
-pacman -S grub efibootmgr networkmanager network-manager-applet wpa_supplicant mtools dosfstools git snapper bluez bluez-utils xdg-utils alsa-utils pulseaudio pulseaudio-bluetooth base-devel linux-headers 
+pacman -S grub efibootmgr networkmanager network-manager-applet wpa_supplicant mtools dosfstools git snapper bluez bluez-utils xdg-utils alsa-utils pulseaudio pulseaudio-bluetooth base-devel linux-headers rsync 
 
 # Including the btrfs module into the kernel
 sed -i '7s/.*/MODULES=(btrfs)/' /etc/mkinitcpio.conf
