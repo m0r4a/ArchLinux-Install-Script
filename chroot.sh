@@ -60,6 +60,12 @@ pacman -S grub efibootmgr networkmanager network-manager-applet wpa_supplicant m
 
 # Including the btrfs module into the kernel
 sed -i '7s/.*/MODULES=(btrfs)/' /etc/mkinitcpio.conf
+
+# Removing fsck hook
+sed -i '/^HOOKS=.*fsck/s/fsck//' /etc/mkinitcpio.conf
+
+
+# Re-generating the config
 mkinitcpio -p linux
 
 # Installing grub 
@@ -84,9 +90,9 @@ usermod -aG wheel,audio,video,storage $usernme
 clear
 
 # Configuring the sudoers file
-echo -e 'Now you will have to uncomment the line \n\n    "%wheel ALL=(ALL:ALL) ALL"  (usually at line 108)\nusing Vim'
-read -p "Press Enter to continue"
-visudo
+chmod u+w /etc/sudoers
+sed -i '/^# %wheel ALL=(ALL:ALL) ALL/s/^#//' /etc/sudoers
+chmod u-w /etc/sudoers
 
 echo "Install completed, now you might want to exit, do umount -a and reboot"
 exit 0
