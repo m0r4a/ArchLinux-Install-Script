@@ -44,10 +44,31 @@ sudo systemctl enable --now snapper-cleanup.timer
 ## Clean the terminal
 clean 
 
-## Pospuesto
+## Installing yay
 echo "Installing yay..."
 cd /opt
 sudo git clone https://aur.archlinux.org/yay-git.git
-sudo chown -R $USER:$USER ./yay-git
+USERBK=$USER
+sudo chown -R $USERBK:$USERBK ./yay-git
 cd yay-git
 makepkg -si
+
+## Preparing the backup rollback
+yay -S snap-pac-grub 
+
+## Creating a hook for back up the boot partition
+sudo mkdir /etc/pacman.d/hooks
+
+### Creating the file
+echo "[Trigger]" >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "Operation = Upgrade" >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "Operation = Install" >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "Operation = Remove" >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "Type = Path" >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "Target = boot/*" >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo " " >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "[Action]" >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "Depends = rsync" >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "Description = Backing up /boot..." >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "When = PreTransaction" >> /etc/pacman.d/hooks/50-bootbackup.hook
+echo "Exec = /usr/bin/rsync -a --delete /boot /.bootbackup" >> /etc/pacman.d/hooks/50-bootbackup.hook
