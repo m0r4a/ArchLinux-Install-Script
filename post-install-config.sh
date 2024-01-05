@@ -60,15 +60,17 @@ yay -S snap-pac-grub
 sudo mkdir /etc/pacman.d/hooks
 
 ### Creating the file
-echo "[Trigger]" >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "Operation = Upgrade" >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "Operation = Install" >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "Operation = Remove" >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "Type = Path" >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "Target = boot/*" >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo " " >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "[Action]" >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "Depends = rsync" >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "Description = Backing up /boot..." >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "When = PreTransaction" >> /etc/pacman.d/hooks/50-bootbackup.hook
-echo "Exec = /usr/bin/rsync -a --delete /boot /.bootbackup" >> /etc/pacman.d/hooks/50-bootbackup.hook
+sudo sh -c 'cat <<EOF >> /etc/pacman.d/hooks/50-bootbackup.hook
+[Trigger]
+Operation = Upgrade
+Operation = Install
+Operation = Remove
+Type = Path
+Target = boot/*
+
+[Action]
+Depends = rsync
+Description = Backing up /boot...
+When = PreTransaction
+Exec = /usr/bin/rsync -a --delete /boot /.bootbackup
+EOF'
