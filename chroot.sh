@@ -39,11 +39,11 @@ echo "$hostnme" > /etc/hostname
 
 # Configuring the hosts file (this can be simpler but i wanted to make the code easier to read)
 echo "Configuring the /etc/hosts file"
-echo "" >> /etc/hosts
-echo "127.0.0.1    localhost" >> /etc/hosts
-echo "::1    localhost" >> /etc/hosts
-echo "127.0.1.1    $hostnme.localdomain    $hostnme" >> /etc/hosts
-
+cat <<EOL >> /etc/hosts
+127.0.0.1    localhost
+::1          localhost
+127.0.1.1    $hostnme.localdomain    $hostnme
+EOL
 
 # Cleaning the screen
 clear
