@@ -25,12 +25,11 @@ boot_p="/dev/$boot_p"
 swap_p="/dev/$swap_p"
 root_p="/dev/$root_p"
 
-# Verifica si todas las variables tienen valores no vacíos
+# Check if the vars are not null
 if [ -z "$boot_p" ] || [ -z "$swap_p" ] || [ -z "$root_p" ]; then
     echo "Error: You have to write all the partitions."
     exit 1
 fi
-
 
 # Cleaning the screen
 clear
