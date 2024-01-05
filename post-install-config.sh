@@ -74,3 +74,22 @@ Description = Backing up /boot...
 When = PreTransaction
 Exec = /usr/bin/rsync -a --delete /boot /.bootbackup
 EOF'
+
+## Adding grub resolution
+echo "Please, select the GRUB's resolution"
+
+select res_option in "1920x1200" "1920x1080"; do
+    case $res_option in
+        "1920x1200")
+            resolution="1920x1200"
+            break
+            ;;
+        "1920x1080")
+            resolution="1920x1080"
+            break
+            ;;
+        *)
+            echo "Please, select a valid option"
+            ;;
+    esac
+done
