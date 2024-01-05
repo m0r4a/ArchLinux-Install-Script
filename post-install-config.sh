@@ -16,6 +16,7 @@ sudo btrfs subvolume delete /.snapshots
 ## Recreating the .snapshots dir
 
 sudo mkdir /.snapshots 
+sudo chmod a+rx /.snapshots 
 
 ## Remounting 
 
@@ -52,6 +53,9 @@ USERBK=$USER
 sudo chown -R $USERBK:$USERBK ./yay-git
 cd yay-git
 makepkg -si
+
+## Making accesible the .snapshots folder
+sudo chown :$USERBK /.snapshots
 
 ## Preparing the backup rollback
 yay -S snap-pac-grub 
@@ -93,3 +97,9 @@ select res_option in "1920x1200" "1920x1080"; do
             ;;
     esac
 done
+
+sudo sed -i "/GRUB_CMDLINE_LINUX_DEFAULT=/s/\"\(.*\)\"/\"loglevel=3 quiet video=$resolution\"/" /etc/default/grub
+
+## Recreating grub's config
+
+sudo grub-mkconfig -o /boot/grub/grub.cfg
