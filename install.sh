@@ -11,7 +11,7 @@ case $partitions_created in
         exit 1
         ;;
 esac
-
+s
 # Showing your partitions
 lsblk 
 
@@ -60,7 +60,7 @@ mount $root_p /mnt
 echo 'Creating the subvolumes "root, home, .snapshots and var_log"..' 
 btrfs su cr /mnt/@
 btrfs su cr /mnt/@home
-btrfs su cr /mnt/@snapshots
+btrfs su cr /mnt/@.snapshots
 btrfs su cr /mnt/@var_log
 
 # Unmounting /mnt directory
@@ -75,7 +75,7 @@ mkdir -p /mnt/{boot,home,.snapshots,var_log}
 
 echo "Mounting the subvolumes..."
 mount -o noatime,compress=lzo,space_cache=v2,subvol=@home $root_p /mnt/home
-mount -o noatime,compress=lzo,space_cache=v2,subvol=@snapshots $root_p /mnt/.snapshots
+mount -o noatime,compress=lzo,space_cache=v2,subvol=@.snapshots $root_p /mnt/.snapshots
 mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log $root_p /mnt/var_log
 
   # Mounting boot
