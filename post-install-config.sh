@@ -19,16 +19,9 @@ sudo rm -r /.snapshots
 ## Creating the configuration
 sudo snapper -c root create-config /  
 
-
-
-########################################################################
-########################################################################
-## Recreating the .snapshots dir
-sudo mkdir /.snapshots 
-sudo chmod a+rx /.snapshots 
-
+##################################################################
 ## Remounting 
-
+exit(0)
 sudo mount -a
 
 ## Editing the permissions of the folder
