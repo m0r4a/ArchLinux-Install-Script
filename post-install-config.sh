@@ -1,4 +1,16 @@
+## Installing yay
+echo "Installing yay..."
+cd /opt
+sudo git clone https://aur.archlinux.org/yay-git.git
+USERBK=$USER
+sudo chown -R $USERBK:$USERBK ./yay-git
+cd yay-git
+makepkg -si
+
 # Configuring snapper
+
+## Preparing the backup rollback
+yay -S snap-pac-grub snap-pac snapper-rollback grub-btrfs
 
 ## Unmounting and removing the .snapshots subvol
 
@@ -49,20 +61,9 @@ sudo systemctl enable --now snapper-cleanup.timer
 ## Clean the terminal
 clean 
 
-## Installing yay
-echo "Installing yay..."
-cd /opt
-sudo git clone https://aur.archlinux.org/yay-git.git
-USERBK=$USER
-sudo chown -R $USERBK:$USERBK ./yay-git
-cd yay-git
-makepkg -si
 
 ## Making accesible the .snapshots folder
 sudo chown :$USERBK /.snapshots
-
-## Preparing the backup rollback
-yay -S snap-pac-grub snap-pac snapper-rollback grub-btrfs
 
 ## Creating a hook for back up the boot partition
 sudo mkdir /etc/pacman.d/hooks
