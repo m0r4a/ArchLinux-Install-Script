@@ -14,19 +14,10 @@ yay -S grub-btrfs snap-pac-grub snap-pac snapper-rollback
 
 ## Unmounting and removing the .snapshots subvol
 sudo umount /.snapshots
-sudo rm -r /.snapshots
+sudo rm -rf /.snapshots
 
 ## Creating the configuration
 sudo snapper -c root create-config /  
-
-##################################################################
-## Remounting 
-exit(0)
-sudo mount -a
-
-## Editing the permissions of the folder
-
-sudo chmod 750 /.snapshots
 
 ## Configuring snapper timeline
 
@@ -44,35 +35,61 @@ sudo sed -i 's/TIMELINE_LIMIT_YEARLY="[0-9]\+"/TIMELINE_LIMIT_YEARLY="0"/' /etc/
 sudo btrfs subvol set-default 256 /
 
 ### Enable the timeline
-sudo systemctl enable --now grub-btrfs.path fdgfdhubgsduyfbgyusdbfguisdbfgiubdfuygbsiuydfbguisydfbguiydbfgiuybdfguiybdfiuygbsudiyfgbiusdfbygiusydfbgiuysdfbgiuysbdfgiusybdfgiuys
+sudo systemctl enable --now grub-btrfsd
 sudo systemctl enable --now snapper-timeline.timer
 sudo systemctl enable --now snapper-cleanup.timer
 
 ## Clean the terminal
 clean 
 
+## I truly dont know how this works, i've got this code from https://github.com/Antynea/grub-btrfs/issues/92
 
-## Making accesible the .snapshots folder
-sudo chown :$USERBK /.snapshots
+cat << 'EOF' > /etc/initcpio/hooks/switchsnaprotorw
+#!/usr/bin/ash
 
-## Creating a hook for back up the boot partition
-sudo mkdir /etc/pacman.d/hooks
+run_hook() {
+	local current_dev=$(resolve_device "$root"); # resolve devices for blkid
+	if [[ $(blkid ${current_dev} -s TYPE -o value) = "btrfs" ]]; then
+		current_snap=$(mktemp -d); # create a random mountpoint in root of initrafms
+		mount -t btrfs -o ro,"${rootflags}" "$current_dev" "${current_snap}";
+		if [[ $(btrfs property get "${current_snap}" ro) != "ro=false" ]]; then # check if the snapshot is in read-only mode
+			snaproot=$(mktemp -d);
+			mount -t btrfs -o rw,subvolid=5 "${current_dev}" "${snaproot}";
+			rwdir=$(mktemp -d)
+			mkdir -p ${snaproot}${rwdir} # create a random folder in root fs of btrfs device
+			btrfs sub snap "${current_snap}" "${snaproot}${rwdir}/rw";
+			umount "${current_snap}";
+			umount "${snaproot}"
+			rmdir "${current_snap}";
+			rmdir "${snaproot}";
+			rootflags=",subvol=${rwdir}/rw";
+		else
+			umount "${current_snap}";
+			rmdir "${current_snap}";
+		fi
+	fi
+}
+EOF
 
-### Creating the file
-sudo sh -c 'cat <<EOF >> /etc/pacman.d/hooks/50-bootbackup.hook
-[Trigger]
-Operation = Upgrade
-Operation = Install
-Operation = Remove
-Type = Path
-Target = boot/*
+# Same here
+cat << 'EOF' > /etc/initcpio/install/switchsnaprotorw
+#!/bin/bash
 
-[Action]
-Depends = rsync
-Description = Backing up /boot...
-When = PreTransaction
-Exec = /usr/bin/rsync -a --delete /boot /.bootbackup
-EOF'
+build() {
+    add_module btrfs
+    add_binary btrfs
+    add_binary btrfsck
+    add_binary blkid
+    add_runscript
+}
+
+help() {
+    cat <<HELPEOF
+This hook creates a copy of the snapshot in read-only mode before boot.
+HELPEOF
+}
+EOF
+
 
 ## Adding grub resolution
 echo "Please, select the GRUB's resolution"
