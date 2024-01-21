@@ -10,23 +10,20 @@ makepkg -si
 # Configuring snapper
 
 ## Preparing the backup rollback
-yay -S snap-pac-grub snap-pac snapper-rollback grub-btrfs
+yay -S grub-btrfs snap-pac-grub snap-pac snapper-rollback 
 
 ## Unmounting and removing the .snapshots subvol
-
 sudo umount /.snapshots
 sudo rm -r /.snapshots
 
 ## Creating the configuration
+sudo snapper -c root create-config /  
 
-sudo snapper -c root create-config / 
 
-## Deleting the subvolume created by the command
 
-sudo btrfs subvolume delete /.snapshots 
-
+########################################################################
+########################################################################
 ## Recreating the .snapshots dir
-
 sudo mkdir /.snapshots 
 sudo chmod a+rx /.snapshots 
 
