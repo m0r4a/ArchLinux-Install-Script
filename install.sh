@@ -11,7 +11,7 @@ case $partitions_created in
         exit 1
         ;;
 esac
-s
+
 # Showing your partitions
 lsblk 
 
