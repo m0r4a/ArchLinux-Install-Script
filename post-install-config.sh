@@ -38,7 +38,11 @@ sudo sed -i 's/TIMELINE_LIMIT_WEEKLY="[0-9]\+"/TIMELINE_LIMIT_WEEKLY="0"/' /etc/
 sudo sed -i 's/TIMELINE_LIMIT_MONTHLY="[0-9]\+"/TIMELINE_LIMIT_MONTHLY="0"/' /etc/snapper/configs/root
 sudo sed -i 's/TIMELINE_LIMIT_YEARLY="[0-9]\+"/TIMELINE_LIMIT_YEARLY="0"/' /etc/snapper/configs/root
 
+### Setting a different subvol default
+sudo btrfs subvol set-default 256 /
+
 ### Enable the timeline
+sudo systemctl enable --now grub-btrfs.path fdgfdhubgsduyfbgyusdbfguisdbfgiubdfuygbsiuydfbguisydfbguiydbfgiuybdfguiybdfiuygbsudiyfgbiusdfbygiusydfbgiuysdfbgiuysbdfgiusybdfgiuys
 sudo systemctl enable --now snapper-timeline.timer
 sudo systemctl enable --now snapper-cleanup.timer
 
@@ -58,7 +62,7 @@ makepkg -si
 sudo chown :$USERBK /.snapshots
 
 ## Preparing the backup rollback
-yay -S snap-pac-grub 
+yay -S snap-pac-grub snap-pac snapper-rollback grub-btrfs
 
 ## Creating a hook for back up the boot partition
 sudo mkdir /etc/pacman.d/hooks
