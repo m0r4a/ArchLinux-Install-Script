@@ -31,6 +31,9 @@ sudo sed -i 's/TIMELINE_LIMIT_WEEKLY="[0-9]\+"/TIMELINE_LIMIT_WEEKLY="0"/' /etc/
 sudo sed -i 's/TIMELINE_LIMIT_MONTHLY="[0-9]\+"/TIMELINE_LIMIT_MONTHLY="0"/' /etc/snapper/configs/root
 sudo sed -i 's/TIMELINE_LIMIT_YEARLY="[0-9]\+"/TIMELINE_LIMIT_YEARLY="0"/' /etc/snapper/configs/root
 
+### This (i think) is not on the arch wiki but I find 50 snapshots excessive
+sudo sed -E -i 's/NUMBER_LIMIT="[0-9]+"/NUMBER_LIMIT="25"/' /etc/snapper/configs/root
+
 ### Setting a different subvol default
 sudo btrfs subvol set-default 256 /
 
