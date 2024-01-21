@@ -96,6 +96,13 @@ sed -i 's/\(HOOKS=(.*\))/\1 switchsnaprotorw)/' /etc/mkinitcpio.conf
 ## Regenerating the config 
 sudo mkinitcpio -P
 
+## Configuring snapper-rollback
+sudo sed -i 's/@snapshots/@.snapshots/' /etc/snapper-rollback.conf
+
+## Getting the root partition 
+p_root=$(awk '/\s\/\s/ {print prev} {prev = $0}' /etc/fstab | sed 's/^#\s*//')
+sudo echo "dev = $p_root"
+
 ## Adding grub resolution
 echo "Please, select the GRUB's resolution"
 
