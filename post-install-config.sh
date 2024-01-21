@@ -90,6 +90,11 @@ HELPEOF
 }
 EOF
 
+# Adding the hook to the config file
+sed -i 's/\(HOOKS=(.*\))/\1 switchsnaprotorw)/' /etc/mkinitcpio.conf
+
+## Regenerating the config 
+sudo mkinitcpio -P
 
 ## Adding grub resolution
 echo "Please, select the GRUB's resolution"
