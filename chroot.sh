@@ -61,10 +61,6 @@ pacman -S grub efibootmgr networkmanager network-manager-applet wpa_supplicant m
 # Including the btrfs module into the kernel
 sed -i '7s/.*/MODULES=(btrfs)/' /etc/mkinitcpio.conf
 
-# Removing fsck hook
-sed -i '/^HOOKS=.*fsck/s/fsck//' /etc/mkinitcpio.conf
-
-
 # Re-generating the config
 mkinitcpio -p linux
 
