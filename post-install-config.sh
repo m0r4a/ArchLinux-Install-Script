@@ -101,7 +101,10 @@ sudo sed -i 's/@snapshots/@.snapshots/' /etc/snapper-rollback.conf
 
 ## Getting the root partition 
 p_root=$(awk '/\s\/\s/ {print prev} {prev = $0}' /etc/fstab | sed 's/^#\s*//')
-sudo echo "dev = $p_root"
+
+## Adding the root partition to the snapper-rollback config file
+sudo sed -i '/^#dev/d' /etc/snapper-rollback.conf
+sudo echo "dev = $p_root" >> /etc/snapper-rollback.conf
 
 ## Adding grub resolution
 echo "Please, select the GRUB's resolution"
