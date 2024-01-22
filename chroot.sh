@@ -9,6 +9,7 @@ case $know_timezone in
         ;;
     *)
         # If the user doesnt know its zoneinfo, they're shown
+        # This doesnt work idk why, should fix it someday xd
         echo "Using timedatectl to show the available timezones"
         sleep 3
         timedatectl list-timezones
