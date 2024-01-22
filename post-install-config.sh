@@ -1,6 +1,7 @@
 ## Checking if running as sudo
 if [ $(echo $USER) == 'root' ]; then
 	echo "Do NOT run this script as root"
+ 	echo "exiting..."
  	exit 1
 fi
 
