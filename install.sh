@@ -17,8 +17,8 @@ lsblk
 
 # Asking for the partitions 
 read -p "Select your boot partition, e.g: sda1: " boot_p
-read -p "Select your swap partition: " swap_p
 read -p "Select the root partition: " root_p
+read -p "Select your swap partition: " swap_p
 
 # Adding /dev/ to the partitions
 boot_p="/dev/$boot_p"
