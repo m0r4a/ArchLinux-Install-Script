@@ -54,7 +54,9 @@ clear
 
 ## I truly dont know how this works, i've got this code from https://github.com/Antynea/grub-btrfs/issues/92
 
-sudo cat << 'EOF' > /etc/initcpio/hooks/switchsnaprotorw
+#################################################################################
+tmpfile1=$(mktemp)
+cat << 'EOF' > "$tmpfile1"
 #!/usr/bin/ash
 
 run_hook() {
@@ -81,8 +83,11 @@ run_hook() {
 }
 EOF
 
-# Same here
-sudo cat << 'EOF' > /etc/initcpio/install/switchsnaprotorw
+sudo tee /etc/initcpio/hooks/switchsnaprotorw < "$tmpfile1" >/dev/null
+rm "$tmpfile1"
+
+tmpfile2=$(mktemp)
+cat << 'EOF' > "$tmpfile2"
 #!/bin/bash
 
 build() {
@@ -99,6 +104,10 @@ This hook creates a copy of the snapshot in read-only mode before boot.
 HELPEOF
 }
 EOF
+
+sudo tee /etc/initcpio/install/switchsnaprotorw < "$tmpfile2" >/dev/null
+rm "$tmpfile2"
+#################################################################################
 
 # Adding the hook to the config file
 sudo sed -i 's/\(HOOKS=(.*\))/\1 switchsnaprotorw)/' /etc/mkinitcpio.conf
