@@ -1,11 +1,7 @@
-## Checking if running as sudo
-if [ $(echo $USER) == 'root' ]; then
-	echo "Do NOT run this script as root"
- 	echo "exiting..."
- 	exit 1
-fi
-
 # Configuring snapper
+
+## Downloading necessary stuff
+yay -S grub-btrfs snap-pac-grub snap-pac snapper-rollback 
 
 ## Unmounting and removing the .snapshots subvol
 sudo umount /.snapshots
@@ -112,4 +108,3 @@ p_root=$(awk '/\s\/\s/ {print prev} {prev = $0}' /etc/fstab | sed 's/^#\s*//')
 # Adding the root partition to the snapper-rollback config file
 sudo sed -i '/^#dev/d' /etc/snapper-rollback.conf
 echo "dev = $p_root" | sudo tee -a /etc/snapper-rollback.conf
-
