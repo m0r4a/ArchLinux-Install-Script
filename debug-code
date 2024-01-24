@@ -116,27 +116,3 @@ p_root=$(awk '/\s\/\s/ {print prev} {prev = $0}' /etc/fstab | sed 's/^#\s*//')
 sudo sed -i '/^#dev/d' /etc/snapper-rollback.conf
 sudo echo "dev = $p_root" >> /etc/snapper-rollback.conf
 
-## Adding grub resolution
-echo "Please, select the GRUB's resolution"
-
-select res_option in "1920x1200" "1920x1080"; do
-    case $res_option in
-        "1920x1200")
-            resolution="1920x1200"
-            break
-            ;;
-        "1920x1080")
-            resolution="1920x1080"
-            break
-            ;;
-        *)
-            echo "Please, select a valid option"
-            ;;
-    esac
-done
-
-sudo sed -i "/GRUB_CMDLINE_LINUX_DEFAULT=/s/\"\(.*\)\"/\"loglevel=3 quiet video=$resolution\"/" /etc/default/grub
-
-## Recreating grub's config
-
-sudo grub-mkconfig -o /boot/grub/grub.cfg
