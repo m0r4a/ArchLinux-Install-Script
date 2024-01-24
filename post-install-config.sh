@@ -16,6 +16,9 @@ makepkg -si
 
 # Configuring snapper
 
+## Downloading necessary stuff
+yay -S grub-btrfs snap-pac-grub snap-pac snapper-rollback 
+
 ## Unmounting and removing the .snapshots subvol
 sudo umount /.snapshots
 sudo rm -rf /.snapshots
