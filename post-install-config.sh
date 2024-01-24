@@ -50,11 +50,11 @@ sudo systemctl enable --now snapper-timeline.timer
 sudo systemctl enable --now snapper-cleanup.timer
 
 ## Clean the terminal
-clean 
+clear
 
 ## I truly dont know how this works, i've got this code from https://github.com/Antynea/grub-btrfs/issues/92
 
-cat << 'EOF' > /etc/initcpio/hooks/switchsnaprotorw
+sudo cat << 'EOF' > /etc/initcpio/hooks/switchsnaprotorw
 #!/usr/bin/ash
 
 run_hook() {
@@ -82,7 +82,7 @@ run_hook() {
 EOF
 
 # Same here
-cat << 'EOF' > /etc/initcpio/install/switchsnaprotorw
+sudo cat << 'EOF' > /etc/initcpio/install/switchsnaprotorw
 #!/bin/bash
 
 build() {
@@ -101,7 +101,7 @@ HELPEOF
 EOF
 
 # Adding the hook to the config file
-sed -i 's/\(HOOKS=(.*\))/\1 switchsnaprotorw)/' /etc/mkinitcpio.conf
+sudo sed -i 's/\(HOOKS=(.*\))/\1 switchsnaprotorw)/' /etc/mkinitcpio.conf
 
 ## Regenerating the config 
 sudo mkinitcpio -P
