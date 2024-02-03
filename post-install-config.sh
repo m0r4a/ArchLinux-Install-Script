@@ -5,14 +5,33 @@ if [ $(echo $USER) == 'root' ]; then
  	exit 1
 fi
 
-## Installing yay
-echo "Installing yay..."
-cd /opt
-sudo git clone https://aur.archlinux.org/yay-git.git
-USERBK=$USER
-sudo chown -R $USERBK:$USERBK ./yay-git
-cd yay-git
-makepkg -si
+# Checking if yay is installed
+if command -v yay &> /dev/null; then
+    echo "yay is already installed."
+else
+    echo "yay is not installed. Installing..."
+
+    # Checking for dependencies
+    if ! command -v git &> /dev/null || ! command -v makepkg &> /dev/null; then
+        echo "Error: Git or makepkg is not installed. Please install them before proceeding."
+        exit 1
+    fi
+
+    # Clonning yay´s repo 
+    cd /opt || exit 1
+    sudo git clone https://aur.archlinux.org/yay-git.git || exit 1
+    USERBK=$USER
+    sudo chown -R "$USERBK:$USERBK" ./yay-git || exit 1
+    cd yay-git || exit 1
+
+    # Compiling and installing yay
+    if ! makepkg -si; then
+        echo "Error: Installation of yay failed."
+        exit 1
+    fi
+
+    echo "yay has been installed successfully."
+fi
 
 # Configuring snapper
 
