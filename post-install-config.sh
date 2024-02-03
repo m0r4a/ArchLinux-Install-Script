@@ -144,6 +144,9 @@ p_root=$(awk '/\s\/\s/ {print prev} {prev = $0}' /etc/fstab | sed 's/^#\s*//')
 sudo sed -i '/^#dev/d' /etc/snapper-rollback.conf
 echo "dev = $p_root" | sudo tee -a /etc/snapper-rollback.conf
 
+# Cleaning the snapshots on grub-btrfs
+sudo sed -i 's/#GRUB_BTRFS_IGNORE_SNAPSHOT_TYPE=("")/GRUB_BTRFS_IGNORE_SNAPSHOT_TYPE=("N\/A")/' /etc/default/grub-btrfs/config
+
 ## Adding grub resolution
 echo "Please, select the GRUB's resolution"
 
