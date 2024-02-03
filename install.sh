@@ -76,7 +76,7 @@ mkdir -p /mnt/{boot,home,.snapshots,var_log}
 echo "Mounting the subvolumes..."
 mount -o noatime,compress=lzo,space_cache=v2,subvol=@home $root_p /mnt/home
 mount -o noatime,compress=lzo,space_cache=v2,subvol=@.snapshots $root_p /mnt/.snapshots
-mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log $root_p /mnt/var_log
+mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log $root_p /mnt/var/log
 
   # Mounting boot
 mount $boot_p /mnt/boot
