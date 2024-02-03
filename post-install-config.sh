@@ -38,38 +38,35 @@ fi
 ## Downloading necessary stuff
 yay -S grub-btrfs snap-pac-grub snap-pac snapper-rollback 
 
-## Logging into sudo 
-sudo su
-
 ## Unmounting and removing the .snapshots subvol
-umount /.snapshots
-rm -rf /.snapshots
+sudo umount /.snapshots
+sudo rm -rf /.snapshots
 
 ## Creating the configuration
-snapper -c root create-config /  
+sudo snapper -c root create-config /  
 
 ## Configuring snapper timeline
 
 ### Adding your username 
-sed -i "s/ALLOW_USERS=\"\"/ALLOW_USERS=\"$USERBK\"/" /etc/snapper/configs/root
+sudo sed -i "s/ALLOW_USERS=\"\"/ALLOW_USERS=\"$USER\"/" /etc/snapper/configs/root
 
 ### Recommended cleanup on the arch wiki
-sed -i 's/TIMELINE_LIMIT_HOURLY="[0-9]\+"/TIMELINE_LIMIT_HOURLY="5"/' /etc/snapper/configs/root
-sed -i 's/TIMELINE_LIMIT_DAILY="[0-9]\+"/TIMELINE_LIMIT_DAILY="7"/' /etc/snapper/configs/root
-sed -i 's/TIMELINE_LIMIT_WEEKLY="[0-9]\+"/TIMELINE_LIMIT_WEEKLY="0"/' /etc/snapper/configs/root
-sed -i 's/TIMELINE_LIMIT_MONTHLY="[0-9]\+"/TIMELINE_LIMIT_MONTHLY="0"/' /etc/snapper/configs/root
-sed -i 's/TIMELINE_LIMIT_YEARLY="[0-9]\+"/TIMELINE_LIMIT_YEARLY="0"/' /etc/snapper/configs/root
+sudo sed -i 's/TIMELINE_LIMIT_HOURLY="[0-9]\+"/TIMELINE_LIMIT_HOURLY="5"/' /etc/snapper/configs/root
+sudo sed -i 's/TIMELINE_LIMIT_DAILY="[0-9]\+"/TIMELINE_LIMIT_DAILY="7"/' /etc/snapper/configs/root
+sudo sed -i 's/TIMELINE_LIMIT_WEEKLY="[0-9]\+"/TIMELINE_LIMIT_WEEKLY="0"/' /etc/snapper/configs/root
+sudo sed -i 's/TIMELINE_LIMIT_MONTHLY="[0-9]\+"/TIMELINE_LIMIT_MONTHLY="0"/' /etc/snapper/configs/root
+sudo sed -i 's/TIMELINE_LIMIT_YEARLY="[0-9]\+"/TIMELINE_LIMIT_YEARLY="0"/' /etc/snapper/configs/root
 
 ### This (i think) is not on the arch wiki but I find 50 snapshots excessive
-sed -E -i 's/NUMBER_LIMIT="[0-9]+"/NUMBER_LIMIT="25"/' /etc/snapper/configs/root
+sudo sed -E -i 's/NUMBER_LIMIT="[0-9]+"/NUMBER_LIMIT="25"/' /etc/snapper/configs/root
 
 ### Setting a different subvol default
-btrfs subvol set-default 256 /
+sudo btrfs subvol set-default 256 /
 
 ### Enable the timeline
-systemctl enable --now grub-btrfsd
-systemctl enable --now snapper-timeline.timer
-systemctl enable --now snapper-cleanup.timer
+sudo systemctl enable --now grub-btrfsd
+sudo systemctl enable --now snapper-timeline.timer
+sudo systemctl enable --now snapper-cleanup.timer
 
 ## Clean the terminal
 clear
@@ -127,28 +124,25 @@ HELPEOF
 }
 EOF
 
-tee /etc/initcpio/install/switchsnaprotorw < "$tmpfile2" >/dev/null
+sudo tee /etc/initcpio/install/switchsnaprotorw < "$tmpfile2" >/dev/null
 rm "$tmpfile2"
 #################################################################################
 
 # Adding the hook to the config file
-sed -i 's/\(HOOKS=(.*\))/\1 switchsnaprotorw)/' /etc/mkinitcpio.conf
+sudo sed -i 's/\(HOOKS=(.*\))/\1 switchsnaprotorw)/' /etc/mkinitcpio.conf
 
 ## Regenerating the config 
-mkinitcpio -P
+sudo mkinitcpio -P
 
 ## Configuring snapper-rollback
-sed -i 's/@snapshots/@.snapshots/' /etc/snapper-rollback.conf
+sudo sed -i 's/@snapshots/@.snapshots/' /etc/snapper-rollback.conf
 
 # Getting the root partition
 p_root=$(awk '/\s\/\s/ {print prev} {prev = $0}' /etc/fstab | sed 's/^#\s*//')
 
 # Adding the root partition to the snapper-rollback config file
-sed -i '/^#dev/d' /etc/snapper-rollback.conf
+sudo sed -i '/^#dev/d' /etc/snapper-rollback.conf
 echo "dev = $p_root" | sudo tee -a /etc/snapper-rollback.conf
-
-# Finishing sudo´s process 
-su $USERBK
 
 ## Adding grub resolution
 echo "Please, select the GRUB's resolution"
